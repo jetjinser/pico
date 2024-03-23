@@ -38,7 +38,7 @@ in
     openFirewall = mkEnableOption "Open ports in the firewall for pgs.";
 
     environment = mkOption {
-      type = with lib.types; attrOf str;
+      type = with lib.types; attrsOf (nullOr (oneOf [ str path package ]));
       description = lib.mdDoc ''
         all general env
         ```
