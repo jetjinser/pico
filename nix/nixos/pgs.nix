@@ -94,7 +94,7 @@ in
     networking.firewall = lib.mkIf cfg.openFirewall {
       allowedTCPPorts =
         let
-          tryGet = attr: lib.optional (builtins.hasAttr attr cfg.environment) cfg.environment.${attr};
+          tryGet = attr: lib.optional (builtins.hasAttr attr cfg.environment) (lib.toInt cfg.environment.${attr});
         in
         (tryGet "PGS_SSH_PORT") ++ (tryGet "PGS_WEB_PORT") ++ (tryGet "PGS_PROM_PORT");
     };
