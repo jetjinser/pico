@@ -132,7 +132,7 @@ in
         wantedBy = [ "pgs-web.service" ];
 
         script = ''
-          cp -r ${cfg.pkg}/pgs .
+          cp -r ${cfg.package}/pgs .
         '';
 
         serviceConfig = {
