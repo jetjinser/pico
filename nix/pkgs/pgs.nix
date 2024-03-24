@@ -22,5 +22,18 @@ buildGoApplication {
     "/cmd/pgs/ssh"
     "/cmd/pgs/web"
   ];
+  installPhase = ''
+    runHook preInstall
+
+    mkdir -p $out
+    dir="$GOPATH/bin"
+    [ -e "$dir" ] && cp -r $dir $out
+
+    mkdir -p $out/pgs
+    cp -r ./pgs/html $out/pgs/html
+    cp -r ./pgs/public $out/pgs/public
+
+    runHook postInstall
+  '';
   modules = ../../gomod2nix.toml;
 }
