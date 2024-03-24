@@ -102,57 +102,76 @@ in
     # ===
 
     systemd.services = {
-      pgs-ssh =
-        {
-          description = "pgs ssh service";
-          wantedBy = [ "multi-user.target" ];
+      pgs-ssh = {
+        description = "pgs ssh service";
+        wantedBy = [ "multi-user.target" ];
 
-          after = [ "network.target" ] ++
-            lib.optional config.services.postgresql.enable "postgresql.service";
+        after = [ "network.target" ] ++
+          lib.optional config.services.postgresql.enable "postgresql.service";
 
-          inherit (cfg) environment;
+        inherit (cfg) environment;
 
-          serviceConfig = {
-            ExecStart = lib.getExe' cfg.package "ssh";
+        serviceConfig = {
+          ExecStart = lib.getExe' cfg.package "ssh";
 
-            Restart = "on-failure";
+          Restart = "on-failure";
 
-            User = cfg.user;
-            Group = cfg.group;
+          User = cfg.user;
+          Group = cfg.group;
 
-            StateDirectory = "pgs-ssh";
-            StateDirectoryMode = "0750";
-            RuntimeDirectory = "pgs-ssh";
-            RuntimeDirectoryMode = "0750";
-            WorkingDirectory = "/var/lib/pgs-ssh";
-          };
+          StateDirectory = "pgs-ssh";
+          StateDirectoryMode = "0750";
+          RuntimeDirectory = "pgs-ssh";
+          RuntimeDirectoryMode = "0750";
+          WorkingDirectory = "/var/lib/pgs-ssh";
         };
+      };
 
-      pgs-web =
-        {
-          description = "pgs web service";
-          wantedBy = [ "multi-user.target" ];
+      pgs-web-init = {
+        description = "pgs web init service";
+        wantedBy = [ "pgs-web.service" ];
 
-          after = [ "network.target" ] ++
-            lib.optional config.services.postgresql.enable "postgresql.service";
+        script = ''
+          cp -r ${cfg.pkg}/pgs .
+        '';
 
-          inherit (cfg) environment;
+        serviceConfig = {
+          Type = "oneshot";
 
-          serviceConfig = {
-            ExecStart = lib.getExe' cfg.package "web";
+          User = cfg.user;
+          Group = cfg.group;
 
-            Restart = "on-failure";
-
-            User = cfg.user;
-            Group = cfg.group;
-
-            StateDirectory = "pgs-web";
-            StateDirectoryMode = "0750";
-            RuntimeDirectory = "pgs-web";
-            RuntimeDirectoryMode = "0750";
-            WorkingDirectory = "/var/lib/pgs-web";
-          };
+          StateDirectory = "pgs-web";
+          StateDirectoryMode = "0750";
+          RuntimeDirectory = "pgs-web";
+          RuntimeDirectoryMode = "0750";
+          WorkingDirectory = "/var/lib/pgs-web";
         };
+      };
+      pgs-web = {
+        description = "pgs web service";
+        wantedBy = [ "multi-user.target" ];
+
+        after = [ "network.target" "pgs-web-init.service" ] ++
+          lib.optional config.services.postgresql.enable "postgresql.service";
+
+        inherit (cfg) environment;
+
+        serviceConfig = {
+          ExecStart = lib.getExe' cfg.package "web";
+
+          Restart = "on-failure";
+
+          User = cfg.user;
+          Group = cfg.group;
+
+          StateDirectory = "pgs-web";
+          StateDirectoryMode = "0750";
+          RuntimeDirectory = "pgs-web";
+          RuntimeDirectoryMode = "0750";
+          WorkingDirectory = "/var/lib/pgs-web";
+        };
+      };
     };
   };
 }
