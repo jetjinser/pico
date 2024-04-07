@@ -101,22 +101,12 @@ in
 
     # ===
 
-    systemd.sockets.pgs-ssh = lib.mkIf (cfg.environment ? PGS_SSH_PORT) {
-      unitConfig = {
-        Description = "pgs SSH socket";
-        BindIPv6Only = "both";
-      };
-      wantedBy = [ "sockets.target" ];
-      listenStreams = [ cfg.environment.PGS_SSH_PORT ];
-    };
-
     systemd.services = {
       pgs-ssh = {
         description = "pgs SSH service";
         wantedBy = [ "multi-user.target" ];
-        requires = [ "pgs-ssh.socket" ];
 
-        after = [ "pgs-ssh.socket" "network.target" ] ++
+        after = [ "network.target" ] ++
           lib.optional config.services.postgresql.enable "postgresql.service";
 
         inherit (cfg) environment;
@@ -129,8 +119,7 @@ in
           User = cfg.user;
           Group = cfg.group;
 
-          StandardInput = "socket";
-          StandardOutput = "journal";
+          AmbientCapabilities = "CAP_NET_BIND_SERVICE";
 
           StateDirectory = "pgs-ssh";
           StateDirectoryMode = "0750";
