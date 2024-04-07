@@ -105,11 +105,12 @@ in
       unitConfig.Description = "pgs SSH socket";
       wantedBy = [ "sockets.target" ];
       listenStreams = [ cfg.environment.PGS_SSH_PORT ];
+      BindIPv6Only = "both";
     };
 
     systemd.services = {
       pgs-ssh = {
-        description = "pgs ssh service";
+        description = "pgs SSH service";
         wantedBy = [ "multi-user.target" ];
         requires = [ "pgs-ssh.socket" ];
 
