@@ -102,10 +102,12 @@ in
     # ===
 
     systemd.sockets.pgs-ssh = lib.mkIf (cfg.environment ? PGS_SSH_PORT) {
-      unitConfig.Description = "pgs SSH socket";
+      unitConfig = {
+        Description = "pgs SSH socket";
+        BindIPv6Only = "both";
+      };
       wantedBy = [ "sockets.target" ];
       listenStreams = [ cfg.environment.PGS_SSH_PORT ];
-      BindIPv6Only = "both";
     };
 
     systemd.services = {
