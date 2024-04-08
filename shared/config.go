@@ -255,6 +255,9 @@ func CreateLogger(debug bool) *slog.Logger {
 	opts := &slog.HandlerOptions{
 		AddSource: true,
 	}
+	if debug {
+		opts.Level = slog.LevelDebug
+	}
 	return slog.New(
 		slog.NewTextHandler(os.Stdout, opts),
 	)
