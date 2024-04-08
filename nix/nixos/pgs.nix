@@ -125,7 +125,7 @@ in
           StateDirectoryMode = "0750";
           RuntimeDirectory = "pgs-ssh";
           RuntimeDirectoryMode = "0750";
-          WorkingDirectory = "/var/lib/pgs-ssh";
+          WorkingDirectory = "/var/lib/pgs";
         };
       };
 
@@ -148,7 +148,7 @@ in
           StateDirectoryMode = "0750";
           RuntimeDirectory = "pgs-web";
           RuntimeDirectoryMode = "0750";
-          WorkingDirectory = "/var/lib/pgs-web";
+          WorkingDirectory = "/var/lib/pgs";
         };
       };
       pgs-web = {
@@ -172,7 +172,7 @@ in
           StateDirectoryMode = "0750";
           RuntimeDirectory = "pgs-web";
           RuntimeDirectoryMode = "0750";
-          WorkingDirectory = "/var/lib/pgs-web";
+          WorkingDirectory = "/var/lib/pgs";
         };
       };
     };
