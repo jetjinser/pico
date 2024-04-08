@@ -135,6 +135,7 @@ in
 
         script = ''
           cp -r ${cfg.package}/pgs .
+          chmod 755 ./pgs
         '';
 
         serviceConfig = {
