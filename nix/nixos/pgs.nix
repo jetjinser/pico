@@ -107,7 +107,7 @@ in
         wantedBy = [ "pgs-web.service" "pgs-ssh.service" ];
 
         script = ''
-          mkdir /var/lib/pgs
+          mkdir -p /var/lib/pgs
           cp -r ${cfg.package}/pgs .
           chmod -R 755 ./pgs
         '';
