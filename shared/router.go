@@ -107,18 +107,25 @@ func findRouteConfig(r *http.Request, routes []Route, subdomainRoutes []Route, c
 	var subdomain string
 	curRoutes := routes
 
+	var logger = cfg.Logger
+	logger.Debug("finding route config")
+
 	if cfg.IsCustomdomains() || cfg.IsSubdomains() {
 		hostDomain := strings.ToLower(strings.Split(r.Host, ":")[0])
+		logger.Debug("got hostDomain", "hostDomain", hostDomain)
 		appDomain := strings.ToLower(strings.Split(cfg.ConfigCms.Domain, ":")[0])
+		logger.Debug("got hostDomain", "hostDomain", hostDomain)
 
 		if hostDomain != appDomain {
 			if strings.Contains(hostDomain, appDomain) {
 				subdomain = strings.TrimSuffix(hostDomain, fmt.Sprintf(".%s", appDomain))
+				logger.Debug("got subdomain #1", "subdomain", subdomain)
 				if subdomain != "" {
 					curRoutes = subdomainRoutes
 				}
 			} else {
 				subdomain = GetCustomDomain(hostDomain, cfg.Space)
+				logger.Debug("got subdomain #2", "subdomain", subdomain, "space", cfg.Space)
 				if subdomain != "" {
 					curRoutes = subdomainRoutes
 				}
@@ -126,10 +133,14 @@ func findRouteConfig(r *http.Request, routes []Route, subdomainRoutes []Route, c
 		}
 	}
 
+	logger.Debug("returns in findRouteConfig", "curRoutes", curRoutes, "subdomain", subdomain)
 	return curRoutes, subdomain
 }
 
 func CreateServe(routes []Route, subdomainRoutes []Route, apiConfig *ApiConfig) ServeFn {
+	var logger = apiConfig.Cfg.Logger;
+
+	logger.Debug("CreateServe")
 	return func(w http.ResponseWriter, r *http.Request) {
 		curRoutes, subdomain := findRouteConfig(r, routes, subdomainRoutes, apiConfig.Cfg)
 		ctx := apiConfig.CreateCtx(r.Context(), subdomain)
