@@ -142,6 +142,8 @@ func CreateServe(routes []Route, subdomainRoutes []Route, apiConfig *ApiConfig) 
 
 	logger.Debug("CreateServe")
 	return func(w http.ResponseWriter, r *http.Request) {
+		logger.Debug("handle req", "request", r)
+
 		curRoutes, subdomain := findRouteConfig(r, routes, subdomainRoutes, apiConfig.Cfg)
 		ctx := apiConfig.CreateCtx(r.Context(), subdomain)
 		router := CreateServeBasic(curRoutes, ctx)
