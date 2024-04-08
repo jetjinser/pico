@@ -425,6 +425,9 @@ func StartApiServer() {
 	cfg := NewConfigSite()
 	logger := cfg.Logger
 
+	logger.Info("logger init", "debug", cfg.Debug)
+	logger.Debug("--- debug ---")
+
 	db := postgres.NewDB(cfg.DbURL, cfg.Logger)
 	defer db.Close()
 
