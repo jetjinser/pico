@@ -138,7 +138,7 @@ func findRouteConfig(r *http.Request, routes []Route, subdomainRoutes []Route, c
 }
 
 func CreateServe(routes []Route, subdomainRoutes []Route, apiConfig *ApiConfig) ServeFn {
-	var logger = apiConfig.Cfg.Logger;
+	var logger = apiConfig.Cfg.Logger
 
 	logger.Debug("CreateServe")
 	return func(w http.ResponseWriter, r *http.Request) {

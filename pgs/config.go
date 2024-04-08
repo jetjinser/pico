@@ -23,9 +23,14 @@ func NewConfigSite() *shared.ConfigSite {
 	minioPass := shared.GetEnv("MINIO_ROOT_PASSWORD", "")
 	dbURL := shared.GetEnv("DATABASE_URL", "")
 	useImgProxy := shared.GetEnv("USE_IMGPROXY", "1")
+	space := shared.GetEnv("PGS_SPACE", "pgs")
 
-	intro := "To create an account, enter a username.\n"
-	intro += "After that, go to https://pico.sh/getting-started#next-steps"
+	desc := shared.GetEnv("PGS_DESC", "A zero-install static site hosting service for hackers")
+
+	defaultIntro := "To create an account, enter a username.\n"
+	defaultIntro += "After that, go to https://pico.sh/getting-started#next-steps"
+
+	intro := shared.GetEnv("PGS_INTRO", defaultIntro)
 
 	cfg := shared.ConfigSite{
 		Debug:                debug == "1",
@@ -42,9 +47,9 @@ func NewConfigSite() *shared.ConfigSite {
 			MinioURL:    minioURL,
 			MinioUser:   minioUser,
 			MinioPass:   minioPass,
-			Description: "A zero-install static site hosting service for hackers",
+			Description: desc,
 			IntroText:   intro,
-			Space:       "pgs",
+			Space:       space,
 			// IMPORTANT: make sure `shared.GetMimeType` has the extensions being
 			// added here.
 			AllowedExt: []string{
